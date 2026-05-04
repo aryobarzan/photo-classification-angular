@@ -1,1 +1,38 @@
-<p>login works!</p>
+<div class="form-box">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label for="username" class="form-label">Username</label>
+    <input id="username" type="text" formControlName="username" class="input-field" />
+    @if (loginForm.controls.username.invalid && loginForm.controls.username.touched) {
+      @if (loginForm.controls.username.hasError('required')) {
+        <span class="form-field-error">Username is required.</span>
+      } @else if (loginForm.controls.username.hasError('minlength')) {
+        <span class="form-field-error">Username must be at least 4 characters.</span>
+      } @else if (loginForm.controls.username.hasError('maxlength')) {
+        <span class="form-field-error">Username must be at most 32 characters.</span>
+      } @else if (loginForm.controls.username.hasError('pattern')) {
+        <span class="form-field-error"
+          >Username can only contain letters, numbers, underscores, and hyphens.</span
+        >
+      }
+    }
+    <div class="mb-4"></div>
+    <label for="password" class="form-label">Password</label>
+    <input id="password" type="password" formControlName="password" class="input-field" />
+    @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+      @if (loginForm.controls.password.hasError('required')) {
+        <span class="form-field-error">Password is required.</span>
+      } @else if (loginForm.controls.password.hasError('minlength')) {
+        <span class="form-field-error">Password must be at least 8 characters.</span>
+      } @else if (loginForm.controls.password.hasError('maxlength')) {
+        <span class="form-field-error">Password must be at most 64 characters.</span>
+      }
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid" class="filled-button mt-4">Login</button>
+  </form>
+  <hr class="divider" />
+  <div class="text-center">
+    Don't have an account?
+    <a routerLink="/register" class="text-button">Register here</a>.
+  </div>
+</div>

@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, Injector, signal } from '@angular/core';
 import { z } from 'zod';
 import { environment } from '../../../environments/environment';
+import { UserService } from './user';
 
 // Expected response format for login and registration endpoints
 const LoginResponseSchema = z.object({
@@ -24,7 +25,17 @@ export class AuthService {
   isLoggedIn = signal(false);
   isAdmin = signal(false);
 
+  private injector = inject(Injector);
+
   constructor() {
+    // // for testing purposes, we pre-fill here
+    // this.token = 'test-token';
+    // this.userId = 1;
+    // this.username = 'testuser';
+    // this.userRole = 'admin';
+    // this.isLoggedIn.set(true);
+    // this.isAdmin.set(true);
+
     // Load token and user info from local storage if available
     const storedToken = localStorage.getItem('token');
     const storedUserId = localStorage.getItem('userId');
@@ -67,7 +78,7 @@ export class AuthService {
     formData.append('password', password);
     // send request to /users/login or /users/register based on isRegistering flag
     const response = await fetch(
-      `${environment.apiUrl}/users/${isRegistering ? 'register' : 'login'}`,
+      `${environment.apiUrl}users/${isRegistering ? 'register' : 'login'}`,
       {
         method: 'POST',
         body: formData,
@@ -95,6 +106,10 @@ export class AuthService {
 
       this.isLoggedIn.set(true);
       this.isAdmin.set(this.userRole === 'admin');
+      if (!isRegistering) {
+        // Fetch user profile
+        this.injector.get(UserService).fetchUserProfile();
+      }
       return true;
     } else {
       return false;

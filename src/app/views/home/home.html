@@ -1,0 +1,16 @@
+<div class="container">
+  <hr class="divider" />
+  <p>
+    Hello <b>{{ authService.username }}</b
+    >!
+  </p>
+  @if (userService.userProfile()) {
+    <app-profile></app-profile>
+  } @else {
+    <p>You have not set up your profile yet.</p>
+  }
+
+  <div class="flex justify-end mt-8">
+    <a routerLink="/profile-editor" class="filled-button">Edit Profile</a>
+  </div>
+</div>

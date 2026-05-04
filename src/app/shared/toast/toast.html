@@ -1,0 +1,10 @@
+@if (toastService.toast()) {
+  <div
+    class="toast"
+    [class.toast-error]="toastService.toast()!.type === 'error'"
+    [class.toast-success]="toastService.toast()!.type === 'success'"
+    (click)="toastService.dismiss()"
+  >
+    {{ toastService.toast()!.message }}
+  </div>
+}

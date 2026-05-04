@@ -1,0 +1,36 @@
+.form-box {
+  width: 100%;
+  max-width: 800px;
+}
+
+.profile-picture-selection-box {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 1rem;
+}
+
+.profile-picture-upload-button {
+  background-color: rgba(204, 204, 204, 0.5);
+  color: black;
+  border: 2px dashed var(--primary);
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: uppercase;
+  width: 128px;
+  height: 128px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+.profile-picture-upload-button:hover {
+  border: 2px solid var(--secondary);
+}
+
+.profile-picture-upload-button:active {
+  border: 2px solid var(--secondary);
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+}

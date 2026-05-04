@@ -1,1 +1,59 @@
-<p>register works!</p>
+<div class="form-box">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label for="username" class="form-label">Username</label>
+    <input id="username" type="text" formControlName="username" class="input-field" />
+    @if (registerForm.controls.username.invalid && registerForm.controls.username.touched) {
+      @if (registerForm.controls.username.hasError('required')) {
+        <span class="form-field-error">Username is required.</span>
+      } @else if (registerForm.controls.username.hasError('minlength')) {
+        <span class="form-field-error">Username must be at least 4 characters.</span>
+      } @else if (registerForm.controls.username.hasError('maxlength')) {
+        <span class="form-field-error">Username must be at most 32 characters.</span>
+      } @else if (registerForm.controls.username.hasError('pattern')) {
+        <span class="form-field-error"
+          >Username can only contain letters, numbers, underscores, and hyphens.</span
+        >
+      }
+    }
+    <div class="mb-4"></div>
+    <label for="password" class="form-label">Password</label>
+    <input id="password" type="password" formControlName="password" class="input-field" />
+    @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+      @if (registerForm.controls.password.hasError('required')) {
+        <span class="form-field-error">Password is required.</span>
+      } @else if (registerForm.controls.password.hasError('minlength')) {
+        <span class="form-field-error">Password must be at least 8 characters.</span>
+      } @else if (registerForm.controls.password.hasError('maxlength')) {
+        <span class="form-field-error">Password must be at most 64 characters.</span>
+      }
+    }
+    <div class="mb-4"></div>
+    <label for="repeatPassword" class="form-label">Repeat Password</label>
+    <input
+      id="repeatPassword"
+      type="password"
+      formControlName="repeatPassword"
+      class="input-field"
+    />
+    @if (
+      registerForm.controls.repeatPassword.invalid && registerForm.controls.repeatPassword.touched
+    ) {
+      @if (registerForm.controls.repeatPassword.hasError('required')) {
+        <span class="form-field-error">Please repeat your password.</span>
+      }
+    }
+    @if (
+      registerForm.hasError('passwordsMismatch') && registerForm.controls.repeatPassword.touched
+    ) {
+      <span class="form-field-error">Passwords do not match.</span>
+    }
+    <button type="submit" [disabled]="registerForm.invalid" class="filled-button mt-4">
+      Register
+    </button>
+  </form>
+  <hr class="divider" />
+  <div class="text-center">
+    Already have an account?
+    <a routerLink="/login" class="text-button">Login here</a>.
+  </div>
+</div>
