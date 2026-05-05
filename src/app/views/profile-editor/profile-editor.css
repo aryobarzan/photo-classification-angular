@@ -23,6 +23,8 @@
   justify-content: center;
   align-items: center;
   user-select: none;
+  /* Set to hidden to avoid having the profile picture overflow out of the profile-picture box */
+  overflow: hidden;
 }
 
 .profile-picture-upload-button:hover {

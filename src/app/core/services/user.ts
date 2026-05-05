@@ -84,14 +84,22 @@ export class UserService {
             ),
           );
           this.profilePictureStatus.set(response.status);
-          console.log(`Profile picture status: ${response.status}`);
           if (response.status === 'processing') {
             setTimeout(poll, intervalMs);
+          } else {
+            // Patch the profile signal with the classification result
+            this.userProfile.update((p) =>
+              p
+                ? {
+                    ...p,
+                    profile_picture_classification:
+                      response.classification ?? p.profile_picture_classification,
+                    profile_picture_is_nsfw: response.status === 'rejected',
+                  }
+                : p,
+            );
           }
-        } catch (err: any) {
-          const msg = `Failed to fetch user profile: ${err.message}`;
-          console.error(msg);
-        }
+        } catch (err: any) {}
       }
     };
     poll();

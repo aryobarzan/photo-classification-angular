@@ -15,3 +15,9 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
+
+/* Ensure text in the profile-box wraps correctly instead of overflowing */
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
