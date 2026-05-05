@@ -1,6 +1,7 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { AuthService } from '../services/auth';
 import { inject } from '@angular/core';
+import { tap } from 'rxjs';
+import { AuthService } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -11,5 +12,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       },
     });
   }
-  return next(req);
+  // Automatically log out the user if a 401 Unauthorized response is received
+  // Can occur if their access token has expired.
+  return next(req).pipe(
+    tap({
+      error: (err) => {
+        if (err.status === 401) {
+          authService.logout();
+        }
+      },
+    }),
+  );
 };

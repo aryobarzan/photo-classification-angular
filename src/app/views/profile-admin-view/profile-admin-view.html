@@ -1,0 +1,11 @@
+<div class="container">
+  <h2 class="mb-4">Profile View (Admin)</h2>
+  @if (userProfile) {
+    <app-profile [userProfile]="userProfile"></app-profile>
+  } @else {
+    <p>Profile not found.</p>
+    <div class="flex flex-row justify-end">
+      <a routerLink="/admin-dashboard" class="filled-button mt-2">Back to Dashboard</a>
+    </div>
+  }
+</div>

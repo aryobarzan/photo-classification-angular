@@ -1,11 +1,16 @@
 export interface UserProfile {
-  firstName: string;
-  lastName: string;
+  // Optional, as it is not set when first creating the profile.
+  user_id?: number;
+  first_name: string;
+  last_name: string;
   age: number;
   gender: 'male' | 'female' | 'other';
-  countryOfOrigin: string;
-  placeOfResidence: string;
+  country_of_origin: string;
+  place_of_residence: string;
   description?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  profile_picture_filename?: string;
+  profile_picture_is_nsfw?: boolean;
+  profile_picture_classification?: string;
+  created_at?: string;
+  updated_at?: string;
 }

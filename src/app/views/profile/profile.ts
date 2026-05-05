@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { UserService } from '../../core/services/user';
+import { AuthService } from '../../core/services/auth';
+import { UserProfile } from '../../core/schemas/user';
 
 @Component({
   selector: 'app-profile',
@@ -8,5 +10,17 @@ import { UserService } from '../../core/services/user';
   styleUrl: './profile.css',
 })
 export class Profile {
-  private userService = inject(UserService);
+  private authService = inject(AuthService);
+  userProfile = input.required<UserProfile>();
+  readonly isAdmin = this.authService.isAdmin;
+
+  userService = inject(UserService);
+
+  getProfilePictureUrl(): string | null {
+    const filename = this.userProfile().profile_picture_filename;
+    if (filename) {
+      return this.userService.fetchProfilePictureUrl(filename);
+    }
+    return null;
+  }
 }

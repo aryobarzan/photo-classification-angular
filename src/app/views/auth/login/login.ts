@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
 import { ToastService } from '../../../core/services/toast';
 
@@ -27,6 +27,7 @@ export class Login {
 
   authService = inject(AuthService);
   toastService = inject(ToastService);
+  router = inject(Router);
 
   async onSubmit() {
     if (this.loginForm.valid) {
@@ -35,6 +36,7 @@ export class Login {
         const success = await this.authService.login(username!, password!);
         if (success) {
           this.toastService.show('Login successful!', 'success');
+          this.router.navigate(['']);
         } else {
           this.toastService.show('Invalid username or password.', 'error');
         }

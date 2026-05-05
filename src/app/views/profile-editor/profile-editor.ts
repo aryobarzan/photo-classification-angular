@@ -45,7 +45,27 @@ export class ProfileEditor {
   userService = inject(UserService);
   toastService = inject(ToastService);
 
-  constructor() {}
+  constructor() {
+    if (this.userService.userProfile()) {
+      const profile = this.userService.userProfile()!;
+      this.profileForm.patchValue({
+        firstName: profile.first_name,
+        lastName: profile.last_name,
+        age: profile.age.toString(),
+        gender: profile.gender,
+        countryOfOrigin: profile.country_of_origin,
+        placeOfResidence: profile.place_of_residence,
+        description: profile.description,
+      });
+    }
+    if (this.userService.userProfile()?.profile_picture_filename) {
+      this.selectedFileUrl.set(
+        this.userService.fetchProfilePictureUrl(
+          this.userService.userProfile()!.profile_picture_filename!,
+        ),
+      );
+    }
+  }
 
   readonly countries = COUNTRIES;
 
@@ -68,12 +88,12 @@ export class ProfileEditor {
     if (this.profileForm.valid) {
       // Handle form submission, e.g., send data to the server
       const profileData: UserProfile = {
-        firstName: this.profileForm.value.firstName!,
-        lastName: this.profileForm.value.lastName!,
+        first_name: this.profileForm.value.firstName!,
+        last_name: this.profileForm.value.lastName!,
         age: Number(this.profileForm.value.age),
         gender: this.profileForm.value.gender as 'male' | 'female' | 'other',
-        countryOfOrigin: this.profileForm.value.countryOfOrigin!,
-        placeOfResidence: this.profileForm.value.placeOfResidence!,
+        country_of_origin: this.profileForm.value.countryOfOrigin!,
+        place_of_residence: this.profileForm.value.placeOfResidence!,
         description: this.profileForm.value.description ?? undefined,
       };
       const errorMessage = await this.userService.updateUserProfile(profileData, this.selectedFile);

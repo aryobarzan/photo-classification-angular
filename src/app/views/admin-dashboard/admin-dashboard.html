@@ -1,0 +1,90 @@
+<div class="container">
+  @if (adminService.fetchingProfiles()) {
+    <div class="flex flex-col items-center mt-4">
+      <div class="indeterminate-loading-spinner"></div>
+      <p>Fetching user profiles...</p>
+    </div>
+  } @else if (adminService.fetchError()) {
+    <div class="flex flex-col">
+      <p>Failed to fetch user profiles.</p>
+      <p class="error">{{ adminService.fetchError() }}</p>
+      <div class="flex flex-row justify-end">
+        <button class="filled-button" (click)="adminService.fetchUserProfiles()">
+          <span class="material-symbols-outlined">refresh</span>Refresh
+        </button>
+      </div>
+    </div>
+  } @else {
+    <p>{{ adminService.userProfiles()?.length || 0 }} user profiles found.</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th (click)="sortBy('first_name')" class="sortable">
+              First Name
+              <span class="sort-icon">{{
+                sortKey() === 'first_name' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+            <th (click)="sortBy('last_name')" class="sortable">
+              Last Name
+              <span class="sort-icon">{{
+                sortKey() === 'last_name' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+            <th (click)="sortBy('age')" class="sortable">
+              Age
+              <span class="sort-icon">{{
+                sortKey() === 'age' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+            <th (click)="sortBy('gender')" class="sortable">
+              Gender
+              <span class="sort-icon">{{
+                sortKey() === 'gender' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+            <th (click)="sortBy('country_of_origin')" class="sortable">
+              Country
+              <span class="sort-icon">{{
+                sortKey() === 'country_of_origin' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+            <th (click)="sortBy('place_of_residence')" class="sortable">
+              Place of Residence
+              <span class="sort-icon">{{
+                sortKey() === 'place_of_residence' ? (sortAsc() ? '▲' : '▼') : '⇅'
+              }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of paged(); track user.user_id) {
+            <tr class="clickable-row" (click)="viewProfile(user)">
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              <td>{{ user.age }}</td>
+              <td>{{ user.gender }}</td>
+              <td [title]="countryName(user.country_of_origin)">{{ user.country_of_origin }}</td>
+              <td>{{ user.place_of_residence }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty">No user profiles found.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button class="filled-button" (click)="prevPage()" [disabled]="page() === 0">
+        <span class="material-symbols-outlined">arrow_left</span> Previous
+      </button>
+      <span>Page {{ page() + 1 }} of {{ totalPages() }}</span>
+      <button class="filled-button" (click)="nextPage()" [disabled]="page() === totalPages() - 1">
+        Next <span class="material-symbols-outlined">arrow_right</span>
+      </button>
+    </div>
+  }
+</div>

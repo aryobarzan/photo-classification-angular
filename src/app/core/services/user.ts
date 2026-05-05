@@ -58,4 +58,8 @@ export class UserService {
       this.fetchingProfile.set(false);
     }
   }
+
+  fetchProfilePictureUrl(filename: string): string {
+    return `${environment.apiUrl}users/profile/picture/${filename}`;
+  }
 }

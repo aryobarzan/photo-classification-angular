@@ -1,1 +1,33 @@
-<p>profile works!</p>
+<div class="profile-box">
+  <div class="flex flex-row gap-2 items-center">
+    @if (this.userProfile().profile_picture_filename) {
+      <img
+        [src]="this.getProfilePictureUrl()"
+        alt="Profile Picture"
+        style="width: 128px; height: 128px; object-fit: cover"
+      />
+    } @else {
+      <span class="material-symbols-outlined" style="font-size: 128px; user-select: none"
+        >account_circle</span
+      >
+    }
+    <span class="name"
+      >{{ this.userProfile().first_name }}, {{ this.userProfile().last_name }}</span
+    >
+  </div>
+  <div class="profile-info">
+    <pre><b>Age:</b> {{ this.userProfile().age }}
+<b>Gender:</b> {{ this.userProfile().gender }}
+<b>Country of Origin:</b> {{ this.userProfile().country_of_origin }}
+<b>Place of Residence:</b> {{ this.userProfile().place_of_residence }}
+@if (this.userProfile().description) {<b>Description:</b> {{ this.userProfile().description }}
+}</pre>
+    @if (this.isAdmin()) {
+      <hr class="divider" />
+      <pre><b>Created at:</b> {{ this.userProfile().created_at }}
+<b>Updated at:</b> {{ this.userProfile().updated_at }}
+<b>Profile Picture Classification:</b> {{ this.userProfile().profile_picture_classification || 'N/A' }}
+<b>Profile Picture NSFW: </b>{{ this.userProfile().profile_picture_is_nsfw !== undefined ? (this.userProfile().profile_picture_is_nsfw ? 'Yes' : 'No') : 'N/A' }}</pre>
+    }
+  </div>
+</div>
