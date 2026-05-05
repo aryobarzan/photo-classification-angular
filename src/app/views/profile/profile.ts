@@ -3,6 +3,7 @@ import { UserService } from '../../core/services/user';
 import { AuthService } from '../../core/services/auth';
 import { UserProfile } from '../../core/schemas/user';
 import { ProfilePicture } from '../../shared/profile-picture/profile-picture';
+import { COUNTRIES } from '../../core/data/countries';
 
 @Component({
   selector: 'app-profile',
@@ -23,5 +24,9 @@ export class Profile {
       return this.userService.fetchProfilePictureUrl(filename);
     }
     return null;
+  }
+
+  countryName(code: string): string {
+    return COUNTRIES.find((c) => c.code === code)?.name ?? code;
   }
 }

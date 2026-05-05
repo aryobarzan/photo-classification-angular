@@ -12,7 +12,7 @@
   <div class="profile-info">
     <pre><b>Age:</b> {{ this.userProfile().age }}
 <b>Gender:</b> {{ this.userProfile().gender }}
-<b>Country of Origin:</b> {{ this.userProfile().country_of_origin }}
+<b>Country of Origin:</b> {{ countryName(this.userProfile().country_of_origin) }}
 <b>Place of Residence:</b> {{ this.userProfile().place_of_residence }}
 @if (this.userProfile().description) {<b>Description:</b> {{ this.userProfile().description }}
 }</pre>
