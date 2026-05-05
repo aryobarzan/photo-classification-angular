@@ -26,7 +26,6 @@ export class UserService {
         this.fetchingProfile.set(false);
       },
       error: (err) => {
-        console.error('Error fetching user profile:', err);
         this.fetchError.set(`Failed to fetch user profile: ${err.message}`);
         this.fetchingProfile.set(false);
       },

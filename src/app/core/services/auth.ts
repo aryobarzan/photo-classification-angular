@@ -90,7 +90,6 @@ export class AuthService {
       // check if response body matches expected format
       const parsedData = LoginResponseSchema.safeParse(data);
       if (!parsedData.success) {
-        console.error('Invalid login response format:', parsedData.error);
         return false;
       }
 

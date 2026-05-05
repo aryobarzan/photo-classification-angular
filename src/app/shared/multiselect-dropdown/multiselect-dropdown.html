@@ -1,0 +1,21 @@
+<button class="dropdown-toggle" type="button" (click)="toggle()">
+  {{ label() }}
+  <span class="material-symbols-outlined">{{ isOpen() ? 'expand_less' : 'expand_more' }}</span>
+</button>
+@if (isOpen()) {
+  <div class="dropdown-backdrop" (click)="isOpen.set(false)"></div>
+  <div class="dropdown-panel">
+    @for (option of options(); track option.value) {
+      <!-- In the case of radio, `change` is not fired when a selected option is clicked again. 
+         As a work-around, we instead use the `click` event and prevent the default behavior. -->
+      <label class="dropdown-option">
+        <input
+          [type]="singleSelect() ? 'radio' : 'checkbox'"
+          [checked]="isSelected(option.value)"
+          (click)="toggleOption(option.value); $event.preventDefault()"
+        />
+        {{ option.label }}
+      </label>
+    }
+  </div>
+}

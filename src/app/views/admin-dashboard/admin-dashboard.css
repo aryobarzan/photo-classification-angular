@@ -1,3 +1,17 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.filters-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .table-wrapper {
   overflow-x: auto;
   margin-top: 1rem;
@@ -77,4 +91,84 @@ td {
   margin-top: 1rem;
   justify-content: flex-end;
   font-size: 0.9rem;
+}
+
+.floating-label-wrapper {
+  position: relative;
+}
+
+.floating-label-wrapper input {
+  width: 100%;
+  padding-top: 1rem;
+}
+
+.floating-label-wrapper label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: gray;
+  pointer-events: none;
+  transition:
+    top 0.15s,
+    font-size 0.15s,
+    color 0.15s;
+}
+
+.floating-label-wrapper input:not(:placeholder-shown) + label,
+.floating-label-wrapper input:focus + label {
+  top: 6px;
+  transform: none;
+  font-size: 0.6rem;
+  color: gray;
+}
+
+.input-field {
+  background-color: white;
+  border-radius: 6px;
+  height: 38px;
+}
+
+.exact-age-input-field {
+  width: 100px;
+}
+
+.age-range-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.age-range-sliders.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.filter-errors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 1.2rem;
+}
+
+.filter-error {
+  font-size: 0.8rem;
+  color: #dc2626;
+}
+
+.age-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.age-slider-row label {
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.age-slider-row input[type='range'] {
+  width: 140px;
 }

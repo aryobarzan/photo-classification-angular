@@ -16,6 +16,106 @@
     </div>
   } @else {
     <p>{{ adminService.userProfiles()?.length || 0 }} user profiles found.</p>
+    <div class="filters">
+      <div class="filters-row">
+        <app-multiselect-dropdown
+          [options]="genderOptions"
+          placeholder="All genders"
+          [(selected)]="pendingGenders"
+        />
+        <app-multiselect-dropdown
+          [options]="countryOptions"
+          placeholder="All countries"
+          [singleSelect]="true"
+          [(selected)]="pendingCountry"
+        />
+        <div class="floating-label-wrapper">
+          <input
+            type="text"
+            placeholder=" "
+            class="input-field"
+            [formControl]="placeOfResidenceFormControl"
+            (input)="pendingPlaceOfResidence.set(placeOfResidenceFormControl.value ?? '')"
+          />
+          <label>Place of residence</label>
+        </div>
+      </div>
+      <div class="filters-row">
+        <div class="floating-label-wrapper exact-age-input-field">
+          <!-- Placeholder is set to a single space to trigger the floating label effect -->
+          <input
+            type="text"
+            placeholder=" "
+            class="input-field"
+            [formControl]="exactAgeFormControl"
+            (input)="
+              pendingExactAge.set(exactAgeFormControl.value ? +exactAgeFormControl.value : null)
+            "
+          />
+          <label>Exact age</label>
+        </div>
+        <!-- If `exactAge` is indicated by user, age range sliders are disabled-->
+        <div class="age-range-sliders" [class.disabled]="pendingExactAge() !== null">
+          <div class="age-slider-row">
+            <label>Min age: {{ pendingMinAge() }}</label>
+            <!-- `#minSlider` is a template reference variable used to access the input element -->
+            <input
+              #minSlider
+              type="range"
+              [min]="minAgeBound"
+              [max]="maxAgeBound"
+              [value]="pendingMinAge()"
+              [disabled]="pendingExactAge() !== null"
+              (input)="
+                pendingMinAge.set(Math.min(+minSlider.value, pendingMaxAge()));
+                minSlider.value = '' + pendingMinAge()
+              "
+            />
+          </div>
+          <div class="age-slider-row">
+            <label>Max age: {{ pendingMaxAge() }}</label>
+            <!-- `#maxSlider` is a template reference variable used to access the input element -->
+            <input
+              #maxSlider
+              type="range"
+              [min]="minAgeBound"
+              [max]="maxAgeBound"
+              [value]="pendingMaxAge()"
+              [disabled]="pendingExactAge() !== null"
+              (input)="
+                pendingMaxAge.set(Math.max(+maxSlider.value, pendingMinAge()));
+                maxSlider.value = '' + pendingMaxAge()
+              "
+            />
+          </div>
+        </div>
+        <!-- `margin-left: auto` is used to push the clear filters button to the right -->
+        <button
+          class="icon-button"
+          style="margin-left: auto"
+          title="Clear filters"
+          (click)="clearFilters()"
+        >
+          <span class="material-symbols-outlined">filter_alt_off</span>
+        </button>
+        <button class="filled-button" (click)="applyFilters()">
+          <span class="material-symbols-outlined">filter_alt</span> Apply
+        </button>
+      </div>
+      <div class="filter-errors">
+        @if (exactAgeFormControl.errors?.['min'] || exactAgeFormControl.errors?.['max']) {
+          <span class="filter-error"
+            >Exact age must be between {{ minAgeBound }} and {{ maxAgeBound }}.</span
+          >
+        }
+        @if (exactAgeFormControl.errors?.['pattern']) {
+          <span class="filter-error">Exact age must be a whole number.</span>
+        }
+        @if (placeOfResidenceFormControl.errors?.['maxlength']) {
+          <span class="filter-error">Place of residence must be at most 100 characters.</span>
+        }
+      </div>
+    </div>
     <div class="table-wrapper">
       <table>
         <thead>
@@ -23,37 +123,37 @@
             <th (click)="sortBy('first_name')" class="sortable">
               First Name
               <span class="sort-icon">{{
-                sortKey() === 'first_name' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'first_name' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
             <th (click)="sortBy('last_name')" class="sortable">
               Last Name
               <span class="sort-icon">{{
-                sortKey() === 'last_name' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'last_name' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
             <th (click)="sortBy('age')" class="sortable">
               Age
               <span class="sort-icon">{{
-                sortKey() === 'age' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'age' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
             <th (click)="sortBy('gender')" class="sortable">
               Gender
               <span class="sort-icon">{{
-                sortKey() === 'gender' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'gender' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
             <th (click)="sortBy('country_of_origin')" class="sortable">
               Country
               <span class="sort-icon">{{
-                sortKey() === 'country_of_origin' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'country_of_origin' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
             <th (click)="sortBy('place_of_residence')" class="sortable">
               Place of Residence
               <span class="sort-icon">{{
-                sortKey() === 'place_of_residence' ? (sortAsc() ? '▲' : '▼') : '⇅'
+                sortKey() === 'place_of_residence' ? (sortAscending() ? '▲' : '▼') : '⇅'
               }}</span>
             </th>
           </tr>
@@ -78,11 +178,15 @@
     </div>
 
     <div class="pagination">
-      <button class="filled-button" (click)="prevPage()" [disabled]="page() === 0">
+      <button class="filled-button" (click)="gotoPreviousPage()" [disabled]="page() === 0">
         <span class="material-symbols-outlined">arrow_left</span> Previous
       </button>
       <span>Page {{ page() + 1 }} of {{ totalPages() }}</span>
-      <button class="filled-button" (click)="nextPage()" [disabled]="page() === totalPages() - 1">
+      <button
+        class="filled-button"
+        (click)="gotoNextPage()"
+        [disabled]="page() === totalPages() - 1"
+      >
         Next <span class="material-symbols-outlined">arrow_right</span>
       </button>
     </div>

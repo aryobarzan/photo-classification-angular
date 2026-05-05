@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { UserProfile } from '../schemas/user';
 import { environment } from '../../../environments/environment.development';
@@ -41,7 +41,13 @@ export class AdminService {
       if (this.minAge !== null) params = params.set('min_age', this.minAge);
       if (this.maxAge !== null) params = params.set('max_age', this.maxAge);
     }
-    if (this.genders?.length) params = params.set('genders', this.genders.join(','));
+    if (this.genders?.length) {
+      // Backend API expects multiple query parameters for each selected gender to filter by, e.g.,
+      // for ['male', 'female], the query string would be ?genders=male&genders=female
+      for (const gender of this.genders) {
+        params = params.append('genders', gender);
+      }
+    }
     if (this.placeOfResidence) params = params.set('place_of_residence', this.placeOfResidence);
     if (this.countryOfOrigin) params = params.set('country_of_origin', this.countryOfOrigin);
     this.http
@@ -51,9 +57,12 @@ export class AdminService {
           this.userProfiles.set(profiles);
           this.fetchingProfiles.set(false);
         },
-        error: (err) => {
-          console.error('Error fetching user profiles:', err);
-          this.fetchError.set(`Failed to fetch user profiles: ${err.message}`);
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 404) {
+            this.userProfiles.set([]);
+          } else {
+            this.fetchError.set(`Failed to fetch user profiles: ${err.message}`);
+          }
           this.fetchingProfiles.set(false);
         },
       });
