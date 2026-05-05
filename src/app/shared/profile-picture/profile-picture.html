@@ -1,0 +1,44 @@
+@switch (state) {
+  @case ('empty') {
+    <span
+      class="placeholder"
+      [style.font-size.px]="size()"
+      [style.width.px]="size()"
+      [style.height.px]="size()"
+      title="No profile picture"
+    >
+      <span class="material-symbols-outlined">account_circle</span>
+    </span>
+  }
+  @case ('processing') {
+    <span
+      class="state-box processing"
+      [style.width.px]="size()"
+      [style.height.px]="size()"
+      title="Profile picture is being processed"
+    >
+      <span class="material-symbols-outlined spinning">sync</span>
+      <span class="state-label">Processing…</span>
+    </span>
+  }
+  @case ('nsfw') {
+    <span
+      class="state-box nsfw"
+      [style.width.px]="size()"
+      [style.height.px]="size()"
+      title="Profile picture was flagged as inappropriate"
+    >
+      <span class="material-symbols-outlined">hide_image</span>
+      <span class="state-label">Flagged</span>
+    </span>
+  }
+  @case ('ready') {
+    <img
+      [src]="pictureUrl"
+      alt="Profile picture"
+      [style.width.px]="size()"
+      [style.height.px]="size()"
+      class="picture"
+    />
+  }
+}

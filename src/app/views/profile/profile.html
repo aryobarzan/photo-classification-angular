@@ -1,16 +1,10 @@
 <div class="profile-box">
   <div class="flex flex-row gap-2 items-center">
-    @if (this.userProfile().profile_picture_filename) {
-      <img
-        [src]="this.getProfilePictureUrl()"
-        alt="Profile Picture"
-        style="width: 128px; height: 128px; object-fit: cover"
-      />
-    } @else {
-      <span class="material-symbols-outlined" style="font-size: 128px; user-select: none"
-        >account_circle</span
-      >
-    }
+    <app-profile-picture
+      [filename]="userProfile().profile_picture_filename"
+      [isNsfw]="userProfile().profile_picture_is_nsfw"
+      [processingStatus]="userService.profilePictureStatus()"
+    />
     <span class="name"
       >{{ this.userProfile().first_name }}, {{ this.userProfile().last_name }}</span
     >

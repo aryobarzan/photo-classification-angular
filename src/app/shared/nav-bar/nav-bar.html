@@ -1,24 +1,19 @@
-<div class="flex flex-row justify-between items-center">
-  <div class="nav-bar nav-links">
-    @if (this.authService.isLoggedIn()) {
-      <a
-        routerLink="/"
-        class="nav-link"
-        routerLinkActive="nav-link-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        >Home</a
-      >
-      <a routerLink="/profile-editor" class="nav-link" routerLinkActive="nav-link-active"
-        >Edit Profile</a
-      >
-    }
-    @if (this.authService.isAdmin()) {
-      <a routerLink="/admin-dashboard" class="nav-link" routerLinkActive="nav-link-active"
-        >Admin Dashboard</a
-      >
-    }
-  </div>
-  <div class="icon-button material-symbols-outlined ml-16" title="Logout" (click)="logout()">
-    logout
-  </div>
+<div class="nav-bar nav-links">
+  @if (this.authService.isLoggedIn()) {
+    <a
+      routerLink="/"
+      class="nav-link"
+      routerLinkActive="nav-link-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a
+    >
+    <a routerLink="/profile-editor" class="nav-link" routerLinkActive="nav-link-active"
+      >Edit Profile</a
+    >
+  }
+  @if (this.authService.isAdmin()) {
+    <a routerLink="/admin-dashboard" class="nav-link" routerLinkActive="nav-link-active"
+      >Admin Dashboard</a
+    >
+  }
 </div>

@@ -2,10 +2,11 @@ import { Component, inject, input } from '@angular/core';
 import { UserService } from '../../core/services/user';
 import { AuthService } from '../../core/services/auth';
 import { UserProfile } from '../../core/schemas/user';
+import { ProfilePicture } from '../../shared/profile-picture/profile-picture';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [ProfilePicture],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

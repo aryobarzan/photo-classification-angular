@@ -4,6 +4,7 @@ import { COUNTRIES } from '../../core/data/countries';
 import { UserService } from '../../core/services/user';
 import { UserProfile } from '../../core/schemas/user';
 import { ToastService } from '../../core/services/toast';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-editor',
@@ -44,6 +45,7 @@ export class ProfileEditor {
 
   userService = inject(UserService);
   toastService = inject(ToastService);
+  router = inject(Router);
 
   constructor() {
     if (this.userService.userProfile()) {
@@ -101,6 +103,8 @@ export class ProfileEditor {
         this.toastService.show('An error occurred while saving your profile.', 'error');
       } else {
         this.toastService.show('Profile updated successfully.', 'success');
+        // Navigate back to home
+        this.router.navigate(['']);
       }
     }
   }

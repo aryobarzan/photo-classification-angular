@@ -5,4 +5,12 @@
   <div class="content">
     <router-outlet />
   </div>
+
+  <footer class="footer flex-col flex items-center gap-4">
+    <hr class="divider" />
+    <p><i>Photo Classification App</i></p>
+    @if (authService.isLoggedIn()) {
+      <div class="text-button" (click)="logout()">Log out</div>
+    }
+  </footer>
 </main>

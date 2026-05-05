@@ -4,6 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { UserProfile } from '../schemas/user';
 
+interface ProfilePictureStatusResponse {
+  status: 'processing' | 'rejected' | 'done';
+  classification?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -48,6 +53,11 @@ export class UserService {
         this.http.put<UserProfile>(`${environment.apiUrl}users/profile`, formData),
       );
       this.userProfile.set(updatedProfile);
+      // Start polling for profile picture status if a new picture was uploaded
+      if (profilePicture) {
+        this.profilePictureStatus.set('processing');
+        this.pollProfilePictureStatus();
+      }
       return null;
     } catch (err: any) {
       const msg = `Failed to update user profile: ${err.message}`;
@@ -60,5 +70,30 @@ export class UserService {
 
   fetchProfilePictureUrl(filename: string): string {
     return `${environment.apiUrl}users/profile/picture/${filename}`;
+  }
+
+  profilePictureStatus = signal<'processing' | 'rejected' | 'done' | null>(null);
+  pollProfilePictureStatus(intervalMs: number = 5000) {
+    const poll = async () => {
+      const profile = this.userProfile();
+      if (profile && this.profilePictureStatus() === 'processing') {
+        try {
+          const response = await firstValueFrom(
+            this.http.get<ProfilePictureStatusResponse>(
+              `${environment.apiUrl}users/profile/picture/status`,
+            ),
+          );
+          this.profilePictureStatus.set(response.status);
+          console.log(`Profile picture status: ${response.status}`);
+          if (response.status === 'processing') {
+            setTimeout(poll, intervalMs);
+          }
+        } catch (err: any) {
+          const msg = `Failed to fetch user profile: ${err.message}`;
+          console.error(msg);
+        }
+      }
+    };
+    poll();
   }
 }
