@@ -28,14 +28,6 @@ export class AuthService {
   private injector = inject(Injector);
 
   constructor() {
-    // // for testing purposes, we pre-fill here
-    // this.token = 'test-token';
-    // this.userId = 1;
-    // this.username = 'testuser';
-    // this.userRole = 'admin';
-    // this.isLoggedIn.set(true);
-    // this.isAdmin.set(true);
-
     // Load token and user info from local storage if available
     const storedToken = localStorage.getItem('token');
     const storedUserId = localStorage.getItem('userId');
